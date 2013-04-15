@@ -26,9 +26,12 @@ class PersistentDeque<T> {
         if (child != null)
         {
             Pair<Pair<T, T>, PersistentDeque<Pair<T, T>>> res = child.popFront();
-            return new Pair<T, PersistentDeque<T>>(res.first.first, new PersistentDeque<T>(res.first.second, res.second, tail));
+            PersistentDeque<T> d = new PersistentDeque<T>(res.first.second, res.second, tail);
+            if (d.empty())
+                d = null;
+            return new Pair<T, PersistentDeque<T>>(res.first.first, d);
         }
-        return new Pair<T, PersistentDeque<T>>(tail, new PersistentDeque<T>());
+        return new Pair<T, PersistentDeque<T>>(tail, null);
     }
 
     public PersistentDeque<T> pushBack(T value) {
@@ -49,9 +52,12 @@ class PersistentDeque<T> {
         if (child != null)
         {
             Pair<Pair<T, T>, PersistentDeque<Pair<T, T>>> res = child.popBack();
-            return new Pair<T, PersistentDeque<T>>(res.first.second, new PersistentDeque<T>(head, res.second, res.first.first));
+            PersistentDeque<T> d = new PersistentDeque<T>(head, res.second, res.first.first);
+            if (d.empty())
+                d = null;
+            return new Pair<T, PersistentDeque<T>>(res.first.second, d);
         }
-        return new Pair<T, PersistentDeque<T>>(head, new PersistentDeque<T>());
+        return new Pair<T, PersistentDeque<T>>(head, null);
     }
 
     private PersistentDeque(T head, PersistentDeque<Pair<T, T>> child, T tail) {
