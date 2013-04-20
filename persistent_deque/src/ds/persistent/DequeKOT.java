@@ -44,8 +44,6 @@ public class DequeKOT<T> {
         {
             Pair<Pair<T, T>, DequeKOT<Pair<T, T>>> res = child.popFront();
             DequeKOT<T> d = new DequeKOT<T>(new Buffer<T>(res.first.second), res.second, tail);
-            if (d.empty())
-                d = null;
             return new Pair<T, DequeKOT<T>>(res.first.first, d);
         }
 
@@ -66,7 +64,7 @@ public class DequeKOT<T> {
         T pairSecond = newTail.popFirst();
         Pair<T, T> pair = new Pair<T, T>(pairFirst, pairSecond);
 
-        return new DequeKOT<T>(head, child.pushFront(pair), new Buffer<T>(newTail, value));
+        return new DequeKOT<T>(head, child.pushBack(pair), new Buffer<T>(newTail, value));
     }
 
     public Pair<T, DequeKOT<T>> popBack() throws NoSuchElementException {
@@ -81,10 +79,8 @@ public class DequeKOT<T> {
         if (child != null)
         {
             Pair<Pair<T, T>, DequeKOT<Pair<T, T>>> res = child.popBack();
-            DequeKOT<T> d = new DequeKOT<T>(head, res.second, new Buffer<T>(res.first.second));
-            if (d.empty())
-                d = null;
-            return new Pair<T, DequeKOT<T>>(res.first.first, d);
+            DequeKOT<T> d = new DequeKOT<T>(head, res.second, new Buffer<T>(res.first.first));
+            return new Pair<T, DequeKOT<T>>(res.first.second, d);
         }
 
         Buffer<T> newHead = head.clone();
@@ -102,7 +98,10 @@ public class DequeKOT<T> {
 
     private DequeKOT(Buffer<T> head, DequeKOT<Pair<T, T>> child, Buffer<T> tail) {
         this.head  = head;
-        this.child = child;
+        if (child != null && !child.empty())
+            this.child = child;
+        else
+            this.child = null;
         this.tail  = tail;
     }
 
