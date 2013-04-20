@@ -1,18 +1,18 @@
 import ds.utility.Pair;
-import ds.persistent.PersistentDeque;
+import ds.persistent.DequeKOT;
 
 public class Main {
     public static void main(String[] args) {
         try
         {
-            PersistentDeque<Integer> deque = new PersistentDeque<Integer>();
+            DequeKOT<Integer> deque = new DequeKOT<Integer>();
             final int count = 12;
             for (int i = 0; i < count; ++i) {
                 deque = deque.pushFront(i);
             }
 
             for (int i = 0; i < count; ++i) {
-                Pair<Integer, PersistentDeque<Integer>> p = deque.popBack();
+                Pair<Integer, DequeKOT<Integer>> p = deque.popFront();
                 System.out.println(p.first);
                 deque = p.second;
             }
@@ -22,7 +22,7 @@ public class Main {
             }
 
             for (int i = 0; i < count; ++i) {
-                Pair<Integer, PersistentDeque<Integer>> p = deque.popFront();
+                Pair<Integer, DequeKOT<Integer>> p = deque.popFront();
                 System.out.println(p.first);
                 deque = p.second;
             }
