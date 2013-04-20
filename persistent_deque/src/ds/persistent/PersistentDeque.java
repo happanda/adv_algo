@@ -4,7 +4,7 @@ import ds.utility.Pair;
 import java.util.NoSuchElementException;
 
 public class PersistentDeque<T> {
-    public PersistentDeque(){
+    public PersistentDeque() {
     }
 
     public Boolean empty() {
@@ -72,5 +72,5 @@ public class PersistentDeque<T> {
     private T head;
     private T tail;
     private PersistentDeque<Pair<T, T>> child;
-    
+
 };
