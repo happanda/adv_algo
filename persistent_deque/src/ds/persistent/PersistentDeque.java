@@ -1,6 +1,9 @@
-import java.lang.Exception;
+package ds.persistent;
 
-class PersistentDeque<T> {
+import ds.utility.Pair;
+import java.util.NoSuchElementException;
+
+public class PersistentDeque<T> {
     public PersistentDeque(){
     }
 
@@ -18,9 +21,9 @@ class PersistentDeque<T> {
         return new PersistentDeque<T>(null, child.pushFront(new Pair<T, T>(value, head)), tail);
     }
 
-    public Pair<T, PersistentDeque<T>> popFront() throws Exception {
+    public Pair<T, PersistentDeque<T>> popFront() throws NoSuchElementException {
         if (empty())
-            throw new Exception("Pop from empty deque");
+            throw new NoSuchElementException("Pop from empty deque");
         if (head != null)
             return new Pair<T, PersistentDeque<T>>(head, new PersistentDeque<T>(null, child, tail));
         if (child != null)
@@ -44,9 +47,9 @@ class PersistentDeque<T> {
         return new PersistentDeque<T>(head, child.pushBack(new Pair<T, T>(tail, value)), null);
     }
 
-    public Pair<T, PersistentDeque<T>> popBack() throws Exception {
+    public Pair<T, PersistentDeque<T>> popBack() throws NoSuchElementException {
         if (empty())
-            throw new Exception("Pop from empty deque");
+            throw new NoSuchElementException("Pop from empty deque");
         if (tail != null)
             return new Pair<T, PersistentDeque<T>>(tail, new PersistentDeque<T>(head, child, null));
         if (child != null)

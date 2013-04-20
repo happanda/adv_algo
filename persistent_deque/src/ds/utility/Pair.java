@@ -1,3 +1,4 @@
+package ds.utility;
 
 public class Pair<TF, TS> {
     public final TF first;
