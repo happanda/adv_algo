@@ -8,7 +8,7 @@ public class Main {
             DequeKOT<Integer> deque = new DequeKOT<Integer>();
             final int count = 12;
             for (int i = 0; i < count; ++i) {
-                deque = deque.pushBack(i);
+                deque = deque.pushFront(i);
             }
 
             for (int i = 0; i < count; ++i) {

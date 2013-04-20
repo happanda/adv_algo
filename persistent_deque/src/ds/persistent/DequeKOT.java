@@ -84,7 +84,7 @@ public class DequeKOT<T> {
         }
 
         Buffer<T> newHead = head.clone();
-        T retValue = newHead.popFirst();
+        T retValue = newHead.popLast();
         return new Pair<T, DequeKOT<T>>(retValue, new DequeKOT<T>(newHead, null, tail));
     }
 
