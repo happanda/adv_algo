@@ -154,14 +154,13 @@ public class DequeTest {
         Decision decision = Decision.PushFront;
         Random rand = new Random();
         int div = 1000;
-        int pushed = 0;
         for (int j = 0; j < div; ++j) {
             for (int oper = 0; oper < NUM_OPERATIONS / div; ++oper) {
-                action(decision, pushed);
+                action(decision, rand.nextInt());
                 decision = dm1.make(decision);
             }
             for (int oper = 0; oper < NUM_OPERATIONS / div; ++oper) {
-                action(decision, pushed++);
+                action(decision, rand.nextInt());
                 decision = dm2.make(decision);
             }
         }
@@ -224,7 +223,8 @@ public class DequeTest {
         ArrayDeque<Integer> et = etalon.peekLast().clone();
         if (et.pollFirst() == null)
             caught_exception = ! caught_exception;
-        etalon.addLast(et);
+        else
+            etalon.addLast(et);
 
         if (caught_exception)
             throw new Exception("One deque threw exception, another didn't");
@@ -243,7 +243,8 @@ public class DequeTest {
         ArrayDeque<Integer> et = etalon.peekLast().clone();
         if (et.pollLast() == null)
             caught_exception = ! caught_exception;
-        etalon.addLast(et);
+        else
+            etalon.addLast(et);
 
         if (caught_exception)
             throw new Exception("One deque threw exception, another didn't");
