@@ -26,7 +26,7 @@ public class PersistentDeque<T> {
             throw new NoSuchElementException("Pop from empty deque");
         if (head != null)
             return new Pair<T, PersistentDeque<T>>(head, new PersistentDeque<T>(null, child, tail));
-        if (child != null)
+        if (child != null && !child.empty())
         {
             Pair<Pair<T, T>, PersistentDeque<Pair<T, T>>> res = child.popFront();
             PersistentDeque<T> d = new PersistentDeque<T>(res.first.second, res.second, tail);
@@ -51,7 +51,7 @@ public class PersistentDeque<T> {
             throw new NoSuchElementException("Pop from empty deque");
         if (tail != null)
             return new Pair<T, PersistentDeque<T>>(tail, new PersistentDeque<T>(head, child, null));
-        if (child != null)
+        if (child != null && !child.empty())
         {
             Pair<Pair<T, T>, PersistentDeque<Pair<T, T>>> res = child.popBack();
             PersistentDeque<T> d = new PersistentDeque<T>(head, res.second, res.first.first);

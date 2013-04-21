@@ -153,14 +153,15 @@ public class DequeTest {
         DecisionMaker dm2 = new PopDM();
         Decision decision = Decision.PushFront;
         Random rand = new Random();
-        int div = 10;
+        int div = 1000;
+        int pushed = 0;
         for (int j = 0; j < div; ++j) {
             for (int oper = 0; oper < NUM_OPERATIONS / div; ++oper) {
-                action(decision, rand.nextInt());
+                action(decision, pushed);
                 decision = dm1.make(decision);
             }
             for (int oper = 0; oper < NUM_OPERATIONS / div; ++oper) {
-                action(decision, rand.nextInt());
+                action(decision, pushed++);
                 decision = dm2.make(decision);
             }
         }
@@ -172,14 +173,14 @@ public class DequeTest {
         int count = 0;
         System.out.println("Validating versions");
         while (!etalon.isEmpty() && !tested.isEmpty()) {
-            System.out.print(count + ", ");
+//            System.out.print(count + ", ");
             if (!validate(etalon.pollFirst(), tested.pollFirst())) {
-                System.out.println("\nTest FAULT");
+                System.out.println("Test FAULT\n");
                 return false;
             }
             ++count;
         }
-        System.out.println("\nTest OK");
+        System.out.println("Test OK\n");
         return true;
     }
 
@@ -220,14 +221,11 @@ public class DequeTest {
             caught_exception = true;
         }
 
-        try {
-            ArrayDeque<Integer> et = etalon.peekLast().clone();
-            et.pollFirst();
-            etalon.addLast(et);
-        }
-        catch (NoSuchElementException ex) {
+        ArrayDeque<Integer> et = etalon.peekLast().clone();
+        if (et.pollFirst() == null)
             caught_exception = ! caught_exception;
-        }
+        etalon.addLast(et);
+
         if (caught_exception)
             throw new Exception("One deque threw exception, another didn't");
     }
@@ -242,14 +240,11 @@ public class DequeTest {
             caught_exception = true;
         }
 
-        try {
-            ArrayDeque<Integer> et = etalon.peekLast().clone();
-            et.pollLast();
-            etalon.addLast(et);
-        }
-        catch (NoSuchElementException ex) {
+        ArrayDeque<Integer> et = etalon.peekLast().clone();
+        if (et.pollLast() == null)
             caught_exception = ! caught_exception;
-        }
+        etalon.addLast(et);
+
         if (caught_exception)
             throw new Exception("One deque threw exception, another didn't");
     }
@@ -260,18 +255,18 @@ public class DequeTest {
                 Integer et_value = etal.pollFirst();
                 Pair<Integer, DequeKOT<Integer>> pair = test.popFront();
                 if (et_value != pair.first) {
-                    System.out.println("\nElements aren't equal: " + et_value + ", " + pair.first);
+                    System.out.println("Elements aren't equal: " + et_value + ", " + pair.first);
                     return false;
                 }
                 test = pair.second;
             }
             catch (NoSuchElementException ex) {
-                System.out.println("\nTested queue has less elements");
+                System.out.println("Tested queue has less elements");
                 return false;
             }
         }
         if (!test.empty()) {
-            System.out.println("\nTested queue still has elements");
+            System.out.println("Tested queue still has elements");
             return false;
         }
         return true;

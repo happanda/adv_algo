@@ -8,8 +8,9 @@ import java.util.NoSuchElementException;
 // Kaplan-Okasaki-Trajan deque
 public class DequeKOT<T> {
     public DequeKOT() {
-        head = new Buffer<T>();
-        tail = new Buffer<T>();
+        head  = new Buffer<T>();
+        tail  = new Buffer<T>();
+        child = null;
     }
 
     public Boolean empty() {
@@ -40,7 +41,7 @@ public class DequeKOT<T> {
 
             return new Pair<T, DequeKOT<T>>(retValue, new DequeKOT<T>(newHead, child, tail));
         }
-        if (child != null)
+        if (child != null && !child.empty())
         {
             Pair<Pair<T, T>, DequeKOT<Pair<T, T>>> res = child.popFront();
             DequeKOT<T> d = new DequeKOT<T>(new Buffer<T>(res.first.second), res.second, tail);
@@ -76,7 +77,7 @@ public class DequeKOT<T> {
 
             return new Pair<T, DequeKOT<T>>(retValue, new DequeKOT<T>(head, child, newTail));
         }
-        if (child != null)
+        if (child != null && !child.empty())
         {
             Pair<Pair<T, T>, DequeKOT<Pair<T, T>>> res = child.popBack();
             DequeKOT<T> d = new DequeKOT<T>(head, res.second, new Buffer<T>(res.first.first));
@@ -97,12 +98,12 @@ public class DequeKOT<T> {
     }
 
     private DequeKOT(Buffer<T> head, DequeKOT<Pair<T, T>> child, Buffer<T> tail) {
-        this.head  = head;
+        this.head = head;
         if (child != null && !child.empty())
             this.child = child;
         else
             this.child = null;
-        this.tail  = tail;
+        this.tail = tail;
     }
 
     private Buffer<T> head;
