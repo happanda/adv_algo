@@ -1,31 +1,23 @@
 import ds.utility.Pair;
 import ds.persistent.DequeKOT;
+import tests.ds.persistent.DequeTest;
 
 public class Main {
     public static void main(String[] args) {
         try
         {
-            DequeKOT<Integer> deque = new DequeKOT<Integer>();
-            final int count = 12;
-            for (int i = 0; i < count; ++i) {
-                deque = deque.pushFront(i);
-            }
-
-            for (int i = 0; i < count; ++i) {
-                Pair<Integer, DequeKOT<Integer>> p = deque.popBack();
-                System.out.println(p.first);
-                deque = p.second;
-            }
-
-            for (int i = 0; i < count; ++i) {
-                deque = deque.pushBack(i);
-            }
-
-            for (int i = 0; i < count; ++i) {
-                Pair<Integer, DequeKOT<Integer>> p = deque.popFront();
-                System.out.println(p.first);
-                deque = p.second;
-            }
+            DequeTest dt = new DequeTest();
+            dt.TestPushPopFront();
+            dt = new DequeTest();
+            dt.TestPushPopBack();
+            dt = new DequeTest();
+            dt.TestPushFrontPopBack();
+            dt = new DequeTest();
+            dt.TestPushBackPopFront();
+            dt = new DequeTest();
+            dt.TestFillEmpty();
+            dt = new DequeTest();
+            dt.TestRandomPushPop();
         }
         catch (Exception ex) {
             System.err.println(ex.getMessage());
