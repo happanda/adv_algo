@@ -69,7 +69,7 @@ public class PersistentDeque<T> {
             this.child = null;
         this.tail  = tail;
     }
-    
+
     private T head;
     private T tail;
     private PersistentDeque<Pair<T, T>> child;
