@@ -75,97 +75,130 @@ public class DequeTest {
     }
 
     public DequeTest() {
-        etalon = new LinkedList<ArrayDeque<Integer>>();
-        tested = new LinkedList<DequeKOT<Integer>>();
-
-        etalon.addLast(new ArrayDeque<Integer>());
-        tested.addLast(new DequeKOT<Integer>());
+        clean();
     }
 
-    public Boolean TestPushPopFront() throws Exception {
+    public Boolean TestPushPopFront() {
         System.out.println("Test push-pop Front");
         DecisionMaker dm = new PushPopOneSideDM();
         Decision decision = Decision.PushFront;
         Random rand = new Random();
-        for (int oper = 0; oper < NUM_OPERATIONS; ++oper) {
-            action(decision, rand.nextInt());
-            decision = dm.make(decision);
-        }
+        Boolean res = false;
+        try {
+            for (int oper = 0; oper < NUM_OPERATIONS; ++oper) {
+                action(decision, rand.nextInt());
+                decision = dm.make(decision);
+            }
 
-        return validate();
+            res = validate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        clean();
+        return res;
     }
 
-    public Boolean TestPushPopBack() throws Exception{
+    public Boolean TestPushPopBack() {
         System.out.println("Test push-pop Back");
         DecisionMaker dm = new PushPopOneSideDM();
         Decision decision = Decision.PushBack;
         Random rand = new Random();
-        for (int oper = 0; oper < NUM_OPERATIONS; ++oper) {
-            action(decision, rand.nextInt());
-            decision = dm.make(decision);
+        Boolean res = false;
+        try {
+            for (int oper = 0; oper < NUM_OPERATIONS; ++oper) {
+                action(decision, rand.nextInt());
+                decision = dm.make(decision);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        return validate();
+        res = validate();
+        clean();
+        return res;
     }
 
-    public Boolean TestPushFrontPopBack() throws Exception {
+    public Boolean TestPushFrontPopBack() {
         System.out.println("Test push Front - pop Back");
         DecisionMaker dm = new PushPopOppositeSideDM();
         Decision decision = Decision.PushFront;
         Random rand = new Random();
-        for (int oper = 0; oper < NUM_OPERATIONS; ++oper) {
-            action(decision, rand.nextInt());
-            decision = dm.make(decision);
+        Boolean res = false;
+        try {
+            for (int oper = 0; oper < NUM_OPERATIONS; ++oper) {
+                action(decision, rand.nextInt());
+                decision = dm.make(decision);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        return validate();
+        res = validate();
+        clean();
+        return res;
     }
 
-    public Boolean TestPushBackPopFront() throws Exception {
+    public Boolean TestPushBackPopFront() {
         System.out.println("Test push Back - pop Front");
         DecisionMaker dm = new PushPopOppositeSideDM();
         Decision decision = Decision.PushBack;
         Random rand = new Random();
-        for (int oper = 0; oper < NUM_OPERATIONS; ++oper) {
-            action(decision, rand.nextInt());
-            decision = dm.make(decision);
+        Boolean res = false;
+        try {
+            for (int oper = 0; oper < NUM_OPERATIONS; ++oper) {
+                action(decision, rand.nextInt());
+                decision = dm.make(decision);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        return validate();
+        res = validate();
+        clean();
+        return res;
     }
 
-    public Boolean TestRandomPushPop() throws Exception {
+    public Boolean TestRandomPushPop() {
         System.out.println("Test Random push-pop");
         DecisionMaker dm = new RandomDM();
         Decision decision = Decision.PushFront;
         Random rand = new Random();
-        for (int oper = 0; oper < NUM_OPERATIONS; ++oper) {
-            action(decision, rand.nextInt());
-            decision = dm.make(decision);
+        Boolean res = false;
+        try {
+            for (int oper = 0; oper < NUM_OPERATIONS; ++oper) {
+                action(decision, rand.nextInt());
+                decision = dm.make(decision);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        return validate();
+        res = validate();
+        clean();
+        return res;
     }
 
-    public Boolean TestFillEmpty() throws Exception {
+    public Boolean TestFillEmpty() {
         System.out.println("Test Filling and Emptying");
         DecisionMaker dm1 = new PushDM();
         DecisionMaker dm2 = new PopDM();
         Decision decision = Decision.PushFront;
         Random rand = new Random();
+        Boolean res = false;
         int div = 1000;
-        for (int j = 0; j < div; ++j) {
-            for (int oper = 0; oper < NUM_OPERATIONS / div; ++oper) {
-                action(decision, rand.nextInt());
-                decision = dm1.make(decision);
+        try {
+            for (int j = 0; j < div; ++j) {
+                for (int oper = 0; oper < NUM_OPERATIONS / div; ++oper) {
+                    action(decision, rand.nextInt());
+                    decision = dm1.make(decision);
+                }
+                for (int oper = 0; oper < NUM_OPERATIONS / div; ++oper) {
+                    action(decision, rand.nextInt());
+                    decision = dm2.make(decision);
+                }
             }
-            for (int oper = 0; oper < NUM_OPERATIONS / div; ++oper) {
-                action(decision, rand.nextInt());
-                decision = dm2.make(decision);
-            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        return validate();
+        res = validate();
+        clean();
+        return res;
     }
 
     public Boolean validate() {
@@ -271,6 +304,14 @@ public class DequeTest {
             return false;
         }
         return true;
+    }
+
+    private void clean() {
+        etalon = new LinkedList<ArrayDeque<Integer>>();
+        tested = new LinkedList<DequeKOT<Integer>>();
+
+        etalon.addLast(new ArrayDeque<Integer>());
+        tested.addLast(new DequeKOT<Integer>());
     }
 
     private LinkedList<ArrayDeque<Integer>> etalon;

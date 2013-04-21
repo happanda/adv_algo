@@ -4,19 +4,18 @@ import tests.ds.persistent.DequeTest;
 
 public class Main {
     public static void main(String[] args) {
+        RunTests();
+    }
+
+    private static void RunTests() {
         try
         {
             DequeTest dt = new DequeTest();
             dt.TestPushPopFront();
-            dt = new DequeTest();
             dt.TestPushPopBack();
-            dt = new DequeTest();
             dt.TestPushFrontPopBack();
-            dt = new DequeTest();
             dt.TestPushBackPopFront();
-            dt = new DequeTest();
             dt.TestFillEmpty();
-            dt = new DequeTest();
             dt.TestRandomPushPop();
         }
         catch (Exception ex) {
@@ -24,3 +23,4 @@ public class Main {
         }
     }
 }
+
