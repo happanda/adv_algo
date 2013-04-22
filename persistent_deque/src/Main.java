@@ -1,3 +1,5 @@
+import ds.persistent.Deque;
+import ds.persistent.PersistentDeque;
 import ds.utility.Pair;
 import ds.persistent.DequeKOT;
 import tests.ds.persistent.DequeTest;
@@ -23,7 +25,7 @@ public class Main {
     }
 
     private static void Interact() {
-        Vector<DequeKOT<String>> deques = new Vector<DequeKOT<String>>();
+        Vector<Deque<String>> deques = new Vector<Deque<String>>();
         deques.add(new DequeKOT<String>());
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -48,13 +50,13 @@ public class Main {
                         System.out.println("Not enough arguments");
                         continue;
                     }
-                    DequeKOT<String> deque = deques.lastElement();
+                    Deque<String> deque = deques.lastElement();
                     deques.add(deque.pushFront(tokens[1]));
                 }
                 else if (tokens[0].equals("-f")) {
                     try {
-                        DequeKOT<String> deque = deques.lastElement();
-                        Pair<String, DequeKOT<String>> pair = deque.popFront();
+                        Deque<String> deque = deques.lastElement();
+                        Pair<String, Deque<String>> pair = deque.popFront();
                         System.out.println("Poped " + pair.first);
                         deques.add(pair.second);
                     }
@@ -67,13 +69,13 @@ public class Main {
                         System.out.println("Not enough arguments");
                         continue;
                     }
-                    DequeKOT<String> deque = deques.lastElement();
+                    Deque<String> deque = deques.lastElement();
                     deques.add(deque.pushBack(tokens[1]));
                 }
                 else if (tokens[0].equals("-b")) {
                     try {
-                        DequeKOT<String> deque = deques.lastElement();
-                        Pair<String, DequeKOT<String>> pair = deque.popBack();
+                        Deque<String> deque = deques.lastElement();
+                        Pair<String, Deque<String>> pair = deque.popBack();
                         System.out.println("Poped " + pair.first);
                         deques.add(pair.second);
                     }
@@ -92,10 +94,10 @@ public class Main {
                             System.out.println("Version number must be between 0 and " + (deques.size() - 1));
                             continue;
                         }
-                        DequeKOT<String> d_cont = deques.elementAt(version);
+                        Deque<String> d_cont = deques.elementAt(version);
                         System.out.println("Contents of deque version " + version + ":");
                         while (!d_cont.empty()) {
-                            Pair<String, DequeKOT<String>> pair = d_cont.popBack();
+                            Pair<String, Deque<String>> pair = d_cont.popBack();
                             System.out.println(pair.first);
                             d_cont = pair.second;
                         }
@@ -117,7 +119,17 @@ public class Main {
     }
 
     private static void RunTests() {
-        DequeTest dt = new DequeTest();
+        System.out.println("Testing PersistentDeque");
+        DequeTest dt = new DequeTest(PersistentDeque.class);
+        dt.TestPushPopFront();
+        dt.TestPushPopBack();
+        dt.TestPushFrontPopBack();
+        dt.TestPushBackPopFront();
+        dt.TestFillEmpty();
+        dt.TestRandomPushPop();
+
+        System.out.println("Testing DequeKOT");
+        dt = new DequeTest(DequeKOT.class);
         dt.TestPushPopFront();
         dt.TestPushPopBack();
         dt.TestPushFrontPopBack();

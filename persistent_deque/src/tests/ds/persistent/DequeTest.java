@@ -1,11 +1,12 @@
 package tests.ds.persistent;
 
+import ds.persistent.Deque;
 import ds.persistent.DequeKOT;
 import ds.utility.Pair;
 
 import java.util.*;
 
-public class DequeTest {
+public class DequeTest<DequeType extends Deque<Integer>> {
 
     public static int NUM_OPERATIONS = 100000;
 
@@ -74,7 +75,8 @@ public class DequeTest {
         private Random rand;
     }
 
-    public DequeTest() {
+    public DequeTest(Class<DequeType> clazz) {
+        this.clazz = clazz;
         clean();
     }
 
@@ -246,7 +248,7 @@ public class DequeTest {
     private void popFront() throws Exception {
         Boolean caught_exception = false;
         try {
-            Pair<Integer, DequeKOT<Integer>> pair = tested.peekLast().popFront();
+            Pair<Integer, Deque<Integer>> pair = tested.peekLast().popFront();
             tested.addLast(pair.second);
         }
         catch (NoSuchElementException ex) {
@@ -266,7 +268,7 @@ public class DequeTest {
     private void popBack() throws Exception {
         Boolean caught_exception = false;
         try {
-            Pair<Integer, DequeKOT<Integer>> pair = tested.peekLast().popBack();
+            Pair<Integer, Deque<Integer>> pair = tested.peekLast().popBack();
             tested.addLast(pair.second);
         }
         catch (NoSuchElementException ex) {
@@ -283,11 +285,11 @@ public class DequeTest {
             throw new Exception("One deque threw exception, another didn't");
     }
 
-    private Boolean validate(ArrayDeque<Integer> etal, DequeKOT<Integer> test) {
+    private Boolean validate(ArrayDeque<Integer> etal, Deque<Integer> test) {
         while (!etal.isEmpty()) {
             try {
                 Integer et_value = etal.pollFirst();
-                Pair<Integer, DequeKOT<Integer>> pair = test.popFront();
+                Pair<Integer, Deque<Integer>> pair = test.popFront();
                 if (et_value != pair.first) {
                     System.out.println("Elements aren't equal: " + et_value + ", " + pair.first);
                     return false;
@@ -308,12 +310,21 @@ public class DequeTest {
 
     private void clean() {
         etalon = new LinkedList<ArrayDeque<Integer>>();
-        tested = new LinkedList<DequeKOT<Integer>>();
+        tested = new LinkedList<Deque<Integer>>();
 
         etalon.addLast(new ArrayDeque<Integer>());
-        tested.addLast(new DequeKOT<Integer>());
+        try {
+            tested.addLast(clazz.newInstance());
+        }
+        catch (InstantiationException ex) {
+            System.out.println("Can't create instance of " + clazz + ": " + ex.getMessage());
+        }
+        catch (IllegalAccessException ex) {
+            System.out.println("Can't create instance of " + clazz + ": " + ex.getMessage());
+        }
     }
 
     private LinkedList<ArrayDeque<Integer>> etalon;
-    private LinkedList<DequeKOT<Integer>>   tested;
+    private LinkedList<Deque<Integer>>      tested;
+    private Class<DequeType> clazz;
 }

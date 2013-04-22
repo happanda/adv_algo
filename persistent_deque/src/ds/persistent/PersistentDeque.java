@@ -3,7 +3,7 @@ package ds.persistent;
 import ds.utility.Pair;
 import java.util.NoSuchElementException;
 
-public class PersistentDeque<T> {
+public class PersistentDeque<T> implements Deque<T> {
     public PersistentDeque() {
     }
 
@@ -21,19 +21,19 @@ public class PersistentDeque<T> {
         return new PersistentDeque<T>(null, child.pushFront(new Pair<T, T>(value, head)), tail);
     }
 
-    public Pair<T, PersistentDeque<T>> popFront() throws NoSuchElementException {
+    public Pair<T, Deque<T>> popFront() throws NoSuchElementException {
         if (empty())
             throw new NoSuchElementException("Pop from empty deque");
         if (head != null)
-            return new Pair<T, PersistentDeque<T>>(head, new PersistentDeque<T>(null, child, tail));
+            return new Pair<T, Deque<T>>(head, new PersistentDeque<T>(null, child, tail));
         if (child != null && !child.empty())
         {
-            Pair<Pair<T, T>, PersistentDeque<Pair<T, T>>> res = child.popFront();
-            PersistentDeque<T> d = new PersistentDeque<T>(res.first.second, res.second, tail);
+            Pair<Pair<T, T>, Deque<Pair<T, T>>> res = child.popFront();
+            PersistentDeque<T> d = new PersistentDeque<T>(res.first.second, (PersistentDeque<Pair<T, T>>)res.second, tail);
 
-            return new Pair<T, PersistentDeque<T>>(res.first.first, d);
+            return new Pair<T, Deque<T>>(res.first.first, d);
         }
-        return new Pair<T, PersistentDeque<T>>(tail, null);
+        return new Pair<T, Deque<T>>(tail, new PersistentDeque<T>());
     }
 
     public PersistentDeque<T> pushBack(T value) {
@@ -46,19 +46,19 @@ public class PersistentDeque<T> {
         return new PersistentDeque<T>(head, child.pushBack(new Pair<T, T>(tail, value)), null);
     }
 
-    public Pair<T, PersistentDeque<T>> popBack() throws NoSuchElementException {
+    public Pair<T, Deque<T>> popBack() throws NoSuchElementException {
         if (empty())
             throw new NoSuchElementException("Pop from empty deque");
         if (tail != null)
-            return new Pair<T, PersistentDeque<T>>(tail, new PersistentDeque<T>(head, child, null));
+            return new Pair<T, Deque<T>>(tail, new PersistentDeque<T>(head, child, null));
         if (child != null && !child.empty())
         {
-            Pair<Pair<T, T>, PersistentDeque<Pair<T, T>>> res = child.popBack();
-            PersistentDeque<T> d = new PersistentDeque<T>(head, res.second, res.first.first);
+            Pair<Pair<T, T>, Deque<Pair<T, T>>> res = child.popBack();
+            PersistentDeque<T> d = new PersistentDeque<T>(head, (PersistentDeque<Pair<T, T>>)res.second, res.first.first);
 
-            return new Pair<T, PersistentDeque<T>>(res.first.second, d);
+            return new Pair<T, Deque<T>>(res.first.second, d);
         }
-        return new Pair<T, PersistentDeque<T>>(head, null);
+        return new Pair<T, Deque<T>>(head, new PersistentDeque<T>());
     }
 
     private PersistentDeque(T head, PersistentDeque<Pair<T, T>> child, T tail) {
