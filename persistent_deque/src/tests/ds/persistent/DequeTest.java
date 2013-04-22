@@ -1,7 +1,6 @@
 package tests.ds.persistent;
 
 import ds.persistent.Deque;
-import ds.persistent.DequeKOT;
 import ds.utility.Pair;
 
 import java.util.*;

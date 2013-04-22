@@ -2,6 +2,7 @@ import ds.persistent.Deque;
 import ds.persistent.PersistentDeque;
 import ds.utility.Pair;
 import ds.persistent.DequeKOT;
+import tests.ds.persistent.DequeBenchmark;
 import tests.ds.persistent.DequeTest;
 
 import java.io.BufferedReader;
@@ -128,7 +129,7 @@ public class Main {
         dt.TestFillEmpty();
         dt.TestRandomPushPop();
 
-        System.out.println("Testing DequeKOT");
+        System.out.println("\nTesting DequeKOT");
         dt = new DequeTest(DequeKOT.class);
         dt.TestPushPopFront();
         dt.TestPushPopBack();
@@ -139,7 +140,21 @@ public class Main {
     }
 
     private static void Benchmark() {
+//        DequeBenchmark<PersistentDeque<Integer>> db1 = new DequeBenchmark(PersistentDeque.class);
+//        db1.BenchPushPopOppositeSide();
+//        DequeBenchmark<DequeKOT<Integer>> db2 = new DequeBenchmark(DequeKOT.class);
+//        db2.BenchPushPopOppositeSide();
 
+//        DequeBenchmark<PersistentDeque<Integer>> db1 = new DequeBenchmark(PersistentDeque.class);
+//        db1.BenchPushPopOneSide();
+
+//        DequeBenchmark<DequeKOT<Integer>> db2 = new DequeBenchmark(DequeKOT.class);
+//        db2.BenchPushPopOneSide();
+
+//        DequeBenchmark<PersistentDeque<Integer>> db1 = new DequeBenchmark(PersistentDeque.class);
+//        db1.BenchFillEmpty();
+//        DequeBenchmark<DequeKOT<Integer>> db2 = new DequeBenchmark(DequeKOT.class);
+//        db2.BenchFillEmpty();
     }
 }
 
