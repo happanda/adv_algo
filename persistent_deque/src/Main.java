@@ -98,7 +98,7 @@ public class Main {
                         Deque<String> d_cont = deques.elementAt(version);
                         System.out.println("Contents of deque version " + version + ":");
                         while (!d_cont.empty()) {
-                            Pair<String, Deque<String>> pair = d_cont.popBack();
+                            Pair<String, Deque<String>> pair = d_cont.popFront();
                             System.out.println(pair.first);
                             d_cont = pair.second;
                         }

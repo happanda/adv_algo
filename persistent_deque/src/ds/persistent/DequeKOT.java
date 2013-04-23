@@ -1,6 +1,5 @@
 package ds.persistent;
 
-import ds.utility.Buffer;
 import ds.utility.Pair;
 
 import java.util.NoSuchElementException;
@@ -8,107 +7,127 @@ import java.util.NoSuchElementException;
 // Kaplan-Okasaki-Trajan deque
 public class DequeKOT<T> implements Deque<T> {
     public DequeKOT() {
-        head  = new Buffer<T>();
-        tail  = new Buffer<T>();
-        child = null;
     }
 
     public Boolean empty() {
-        return head.empty() && tail.empty() && child == null;
+        return head1 == null && head2 == null && head3 == null
+                && tail1 == null && tail2 == null && tail3 == null && child == null;
     }
 
     public DequeKOT<T> pushFront(T value) {
-        if (!overflowed(head))
-            return new DequeKOT<T>(new Buffer<T>(value, head), child, tail);
+        if (!full(DequeEnd.HEAD))
+            return new DequeKOT<T>(value, head1, head2, child, tail1, tail2, tail3);
 
         if (child == null)
             child = new DequeKOT<Pair<T, T>>();
 
-        Buffer<T> newHead = head.clone();
-        T pairSecond = newHead.popLast();
-        T pairFirst  = newHead.popLast();
-        Pair<T, T> pair = new Pair<T, T>(pairFirst, pairSecond);
+        Pair<T, T> pair = new Pair<T, T>(head2, head3);
 
-        return new DequeKOT<T>(new Buffer<T>(value, newHead), child.pushFront(pair), tail);
+        return new DequeKOT<T>(value, head1, null, child.pushFront(pair), tail1, tail2, tail3);
     }
 
     public Pair<T, Deque<T>> popFront() throws NoSuchElementException {
-        if (empty())
-            throw new NoSuchElementException("Pop from empty deque");
-        if (!empty(head)) {
-            Buffer<T> newHead = head.clone();
-            T retValue = newHead.popFirst();
-
-            return new Pair<T, Deque<T>>(retValue, new DequeKOT<T>(newHead, child, tail));
+        if (!empty(DequeEnd.HEAD)) {
+            return new Pair<T, Deque<T>>(head1, new DequeKOT<T>(head2, head3, null, child, tail1, tail2, tail3));
         }
         if (child != null && !child.empty())
         {
             Pair<Pair<T, T>, Deque<Pair<T, T>>> res = child.popFront();
-            DequeKOT<T> d = new DequeKOT<T>(new Buffer<T>(res.first.second), (DequeKOT<Pair<T, T>>)res.second, tail);
+            DequeKOT<T> d = new DequeKOT<T>(res.first.second, null, null,
+                    (DequeKOT<Pair<T, T>>)res.second,
+                    tail1, tail2, tail3);
             return new Pair<T, Deque<T>>(res.first.first, d);
         }
 
-        Buffer<T> newTail = tail.clone();
-        T retValue = newTail.popFirst();
-        return new Pair<T, Deque<T>>(retValue, new DequeKOT<T>(head, null, newTail));
+        if (tail1 != null)
+            return new Pair<T, Deque<T>>(tail1, new DequeKOT<T>(null, null, null, null, null, tail2, tail3));
+        if (tail2 != null)
+            return new Pair<T, Deque<T>>(tail2, new DequeKOT<T>(null, null, null, null, null, null, tail3));
+        if (tail3 != null)
+            return new Pair<T, Deque<T>>(tail3, new DequeKOT<T>());
+
+        throw new NoSuchElementException("Pop from empty deque");
     }
 
     public DequeKOT<T> pushBack(T value) {
-        if (!overflowed(tail))
-            return new DequeKOT<T>(head, child, new Buffer<T>(tail, value));
+        if (!full(DequeEnd.TAIL))
+            return new DequeKOT<T>(head1, head2, head3, child, tail2, tail3, value);
 
         if (child == null)
             child = new DequeKOT<Pair<T, T>>();
 
-        Buffer<T> newTail = tail.clone();
-        T pairFirst  = newTail.popFirst();
-        T pairSecond = newTail.popFirst();
-        Pair<T, T> pair = new Pair<T, T>(pairFirst, pairSecond);
+        Pair<T, T> pair = new Pair<T, T>(tail1, tail2);
 
-        return new DequeKOT<T>(head, child.pushBack(pair), new Buffer<T>(newTail, value));
+        return new DequeKOT<T>(head1, head2, head3, child.pushBack(pair), null, tail3, value);
     }
 
     public Pair<T, Deque<T>> popBack() throws NoSuchElementException {
-        if (empty())
-            throw new NoSuchElementException("Pop from empty deque");
-        if (!empty(tail)) {
-            Buffer<T> newTail = tail.clone();
-            T retValue = newTail.popLast();
-
-            return new Pair<T, Deque<T>>(retValue, new DequeKOT<T>(head, child, newTail));
+        if (!empty(DequeEnd.TAIL)) {
+            return new Pair<T, Deque<T>>(tail3, new DequeKOT<T>(head1, head2, head3, child, null, tail1, tail2));
         }
         if (child != null && !child.empty())
         {
             Pair<Pair<T, T>, Deque<Pair<T, T>>> res = child.popBack();
-            DequeKOT<T> d = new DequeKOT<T>(head, (DequeKOT<Pair<T, T>>)res.second, new Buffer<T>(res.first.first));
+            DequeKOT<T> d = new DequeKOT<T>(head1, head2, head3,
+                    (DequeKOT<Pair<T, T>>)res.second,
+                    null, null, res.first.first);
             return new Pair<T, Deque<T>>(res.first.second, d);
         }
 
-        Buffer<T> newHead = head.clone();
-        T retValue = newHead.popLast();
-        return new Pair<T, Deque<T>>(retValue, new DequeKOT<T>(newHead, null, tail));
+        if (head3 != null)
+            return new Pair<T, Deque<T>>(head3, new DequeKOT<T>(head1, head2, null, null, null, null, null));
+        if (head2 != null)
+            return new Pair<T, Deque<T>>(head2, new DequeKOT<T>(head1, null, null, null, null, null, null));
+        if (head1 != null)
+            return new Pair<T, Deque<T>>(head1, new DequeKOT<T>());
+
+        throw new NoSuchElementException("Pop from empty deque");
     }
 
-    private Boolean empty(Buffer<T> buff) {
-        return buff.empty();
+    enum DequeEnd {
+        HEAD, TAIL
     }
 
-    private Boolean overflowed(Buffer<T> buff) {
-        return buff.size() >= SIZE;
+    private Boolean empty(DequeEnd end) {
+        switch (end) {
+            case HEAD:
+                return head1 == null && head2 == null && head3 == null;
+            case TAIL:
+                return tail1 == null && tail2 == null && tail3 == null;
+        }
+        return false;
     }
 
-    private DequeKOT(Buffer<T> head, DequeKOT<Pair<T, T>> child, Buffer<T> tail) {
-        this.head = head;
+    private Boolean full(DequeEnd end) {
+        switch (end) {
+            case HEAD:
+                return head1 != null && head2 != null && head3 != null;
+            case TAIL:
+                return tail1 != null && tail2 != null && tail3 != null;
+        }
+        return false;
+    }
+
+    private DequeKOT(T head1, T head2, T head3, DequeKOT<Pair<T, T>> child,
+                     T tail1, T tail2, T tail3) {
+        this.head1 = head1;
+        this.head2 = head2;
+        this.head3 = head3;
+        this.tail1 = tail1;
+        this.tail2 = tail2;
+        this.tail3 = tail3;
         if (child != null && !child.empty())
             this.child = child;
         else
             this.child = null;
-        this.tail = tail;
     }
 
-    private Buffer<T> head;
-    private Buffer<T> tail;
+    private T head1;
+    private T head2;
+    private T head3;
+    private T tail1;
+    private T tail2;
+    private T tail3;
     private DequeKOT<Pair<T, T>> child;
 
-    private static int SIZE = 3;
 }
