@@ -91,5 +91,5 @@ public class DequeBenchmark<DequeType extends Deque<Integer>> {
     private Class<DequeType> clazz;
     private DequeType        deque;
 
-    private int NUM_OPERATIONS = 20000000;
+    private int NUM_OPERATIONS = 40000000;
 }

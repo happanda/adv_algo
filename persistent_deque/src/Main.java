@@ -150,10 +150,10 @@ public class Main {
 //        DequeBenchmark<DequeKOT<Integer>> db2 = new DequeBenchmark(DequeKOT.class);
 //        db2.BenchPushPopOppositeSide();
 
-//        DequeBenchmark<PersistentDeque<Integer>> db1 = new DequeBenchmark(PersistentDeque.class);
-//        db1.BenchFillEmpty();
-        DequeBenchmark<DequeKOT<Integer>> db2 = new DequeBenchmark(DequeKOT.class);
-        db2.BenchFillEmpty();
+        DequeBenchmark<PersistentDeque<Integer>> db1 = new DequeBenchmark(PersistentDeque.class);
+        db1.BenchFillEmpty();
+//        DequeBenchmark<DequeKOT<Integer>> db2 = new DequeBenchmark(DequeKOT.class);
+//        db2.BenchFillEmpty();
     }
 }
 

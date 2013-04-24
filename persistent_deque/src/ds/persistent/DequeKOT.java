@@ -10,8 +10,7 @@ public class DequeKOT<T> implements Deque<T> {
     }
 
     public Boolean empty() {
-        return head1 == null && head2 == null && head3 == null
-                && tail1 == null && tail2 == null && tail3 == null && child == null;
+        return head1 == null && tail3 == null && child == null;
     }
 
     public DequeKOT<T> pushFront(T value) {
@@ -90,17 +89,17 @@ public class DequeKOT<T> implements Deque<T> {
 
     private Boolean empty(DequeEnd end) {
         if (end == DequeEnd.HEAD)
-            return head1 == null && head2 == null && head3 == null;
+            return head1 == null;
         if (end == DequeEnd.TAIL)
-            return tail3 == null && tail2 == null && tail1 == null;
+            return tail3 == null;
         return false;
     }
 
     private Boolean full(DequeEnd end) {
         if (end == DequeEnd.HEAD)
-            return head3 != null && head2 != null && head1 != null;
+            return head3 != null;
         if (end == DequeEnd.TAIL)
-            return tail1 != null && tail2 != null && tail3 != null;
+            return tail1 != null;
         return false;
     }
 
