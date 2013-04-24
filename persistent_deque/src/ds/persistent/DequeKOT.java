@@ -89,22 +89,18 @@ public class DequeKOT<T> implements Deque<T> {
     }
 
     private Boolean empty(DequeEnd end) {
-        switch (end) {
-            case HEAD:
-                return head1 == null && head2 == null && head3 == null;
-            case TAIL:
-                return tail1 == null && tail2 == null && tail3 == null;
-        }
+        if (end == DequeEnd.HEAD)
+            return head1 == null && head2 == null && head3 == null;
+        if (end == DequeEnd.TAIL)
+            return tail3 == null && tail2 == null && tail1 == null;
         return false;
     }
 
     private Boolean full(DequeEnd end) {
-        switch (end) {
-            case HEAD:
-                return head1 != null && head2 != null && head3 != null;
-            case TAIL:
-                return tail1 != null && tail2 != null && tail3 != null;
-        }
+        if (end == DequeEnd.HEAD)
+            return head3 != null && head2 != null && head1 != null;
+        if (end == DequeEnd.TAIL)
+            return tail1 != null && tail2 != null && tail3 != null;
         return false;
     }
 
@@ -121,6 +117,19 @@ public class DequeKOT<T> implements Deque<T> {
         else
             this.child = null;
     }
+
+//    private void start() {
+//        startTime = System.nanoTime();
+//    }
+//
+//    private void stop() {
+//        endTime = System.nanoTime();
+//        duration += (endTime - startTime);
+//    }
+//
+//    private long startTime;
+//    private long endTime;
+//    private long duration;
 
     private T head1;
     private T head2;

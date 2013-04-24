@@ -1,13 +1,12 @@
 package tests.ds.persistent;
 
 import ds.persistent.Deque;
-import ds.persistent.DequeKOT;
-import ds.persistent.PersistentDeque;
 
 
 public class DequeBenchmark<DequeType extends Deque<Integer>> {
 
     public DequeBenchmark(Class<DequeType> clazz) {
+        System.out.println("Benchmark for " + clazz);
         this.clazz = clazz;
         try {
             deque = clazz.newInstance();
@@ -51,7 +50,7 @@ public class DequeBenchmark<DequeType extends Deque<Integer>> {
     public void BenchFillEmpty() {
         measure(new Meter() {
             public String name() {
-                return "PushPopOneSide";
+                return "FillEmpty";
             }
             public void action() {
                 for (int i = 0; i < NUM_OPERATIONS; ++i) {
@@ -92,5 +91,5 @@ public class DequeBenchmark<DequeType extends Deque<Integer>> {
     private Class<DequeType> clazz;
     private DequeType        deque;
 
-    private int NUM_OPERATIONS = 90000000;
+    private int NUM_OPERATIONS = 20000000;
 }
