@@ -14,20 +14,36 @@ import java.util.Vector;
 public class Main {
     public static void main(String[] args) {
         if (args.length < 1) {
-            System.out.println("Not enough arguments");
+            System.out.println("Not enough arguments (use '-t' or '-i' or '-b'");
             System.exit(1);
         }
         if (args[0].equals("-t"))
             RunTests();
         if (args[0].equals("-i"))
             Interact();
-        if (args[0].equals("-b"))
-            Benchmark();
+        if (args[0].equals("-b")) {
+            if (args.length < 4) {
+                System.out.println("Provide tested deque ('k' for DequeKOT or 'p' " +
+                        "or PersistentDeque), kind of test ('r' for AllRandom or 'f' for FillEmpty)" +
+                        " and number of operations");
+                System.exit(1);
+            }
+
+            try {
+                int numOperations = Integer.parseInt(args[3]);
+                Benchmark("k".equals(args[1]), "r".equals(args[2]), numOperations);
+            }
+            catch (NumberFormatException ex) {
+                System.out.println("Can't parse number of operations!!");
+                System.exit(1);
+            }
+        }
     }
 
     private static void Interact() {
         Vector<Deque<String>> deques = new Vector<Deque<String>>();
         deques.add(new DequeKOT<String>());
+        int curVersion = 0;
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -38,6 +54,7 @@ public class Main {
             System.out.println("+b - push string value at the end");
             System.out.println("-b - pop string value at the end");
             System.out.println("p <N> - print contents of version number N");
+            System.out.println("Current version: " + curVersion);
             System.out.println("Ctrl + C - exit");
             try {
                 String line = br.readLine();
@@ -53,6 +70,7 @@ public class Main {
                     }
                     Deque<String> deque = deques.lastElement();
                     deques.add(deque.pushFront(tokens[1]));
+                    ++curVersion;
                 }
                 else if (tokens[0].equals("-f")) {
                     try {
@@ -60,6 +78,7 @@ public class Main {
                         Pair<String, Deque<String>> pair = deque.popFront();
                         System.out.println("Poped " + pair.first);
                         deques.add(pair.second);
+                        ++curVersion;
                     }
                     catch (NoSuchElementException ex) {
                         System.out.println("Deque is empty already");
@@ -72,6 +91,7 @@ public class Main {
                     }
                     Deque<String> deque = deques.lastElement();
                     deques.add(deque.pushBack(tokens[1]));
+                    ++curVersion;
                 }
                 else if (tokens[0].equals("-b")) {
                     try {
@@ -79,6 +99,7 @@ public class Main {
                         Pair<String, Deque<String>> pair = deque.popBack();
                         System.out.println("Poped " + pair.first);
                         deques.add(pair.second);
+                        ++curVersion;
                     }
                     catch (NoSuchElementException ex) {
                         System.out.println("Deque is empty already");
@@ -139,21 +160,25 @@ public class Main {
         dt.TestRandomPushPop();
     }
 
-    private static void Benchmark() {
-//        DequeBenchmark<PersistentDeque<Integer>> db1 = new DequeBenchmark(PersistentDeque.class);
-//        db1.BenchPushPopOneSide();
-//        DequeBenchmark<DequeKOT<Integer>> db2 = new DequeBenchmark(DequeKOT.class);
-//        db2.BenchPushPopOneSide();
-
-//        DequeBenchmark<PersistentDeque<Integer>> db1 = new DequeBenchmark(PersistentDeque.class);
-//        db1.BenchPushPopOppositeSide();
-//        DequeBenchmark<DequeKOT<Integer>> db2 = new DequeBenchmark(DequeKOT.class);
-//        db2.BenchPushPopOppositeSide();
-
-        DequeBenchmark<PersistentDeque<Integer>> db1 = new DequeBenchmark(PersistentDeque.class);
-        db1.BenchFillEmpty();
-//        DequeBenchmark<DequeKOT<Integer>> db2 = new DequeBenchmark(DequeKOT.class);
-//        db2.BenchFillEmpty();
+    private static void Benchmark(Boolean kot, Boolean random, int numOperations) {
+        if (kot) {
+            DequeBenchmark<DequeKOT<Integer>> db = new DequeBenchmark(DequeKOT.class);
+            if (random) {
+                db.BenchAllRandom(numOperations);
+            }
+            else {
+                db.BenchFillEmptyWorstCase(numOperations);
+            }
+        }
+        else {
+            DequeBenchmark<PersistentDeque<Integer>> db = new DequeBenchmark(PersistentDeque.class);
+            if (random) {
+                db.BenchAllRandom(numOperations);
+            }
+            else {
+                db.BenchFillEmptyWorstCase(numOperations);
+            }
+        }
     }
 }
 

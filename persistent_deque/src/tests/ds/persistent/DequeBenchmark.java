@@ -2,10 +2,13 @@ package tests.ds.persistent;
 
 import ds.persistent.Deque;
 
+import java.util.Random;
+
 
 public class DequeBenchmark<DequeType extends Deque<Integer>> {
 
     public DequeBenchmark(Class<DequeType> clazz) {
+        totalTime = 0;
         System.out.println("Benchmark for " + clazz);
         this.clazz = clazz;
         try {
@@ -19,60 +22,63 @@ public class DequeBenchmark<DequeType extends Deque<Integer>> {
         }
     }
 
-    public void BenchPushPopOneSide() {
-        measure(new Meter() {
-            public String name() {
-                return "PushPopOneSide";
-            }
-            public void action() {
-                for (int i = 0; i < NUM_OPERATIONS; ++i) {
-                    deque = (DequeType)deque.pushFront(i);
-                    deque = (DequeType)deque.popFront().second;
-                }
-            }
-        });
+    interface Meter {
+        public String name();
+        public void prepare();
+        public void action();
     }
 
-    public void BenchPushPopOppositeSide() {
+    public void BenchFillEmptyWorstCase(final int numOperations) {
         measure(new Meter() {
             public String name() {
-                return "PushPopOneSide";
+                return "FillEmptyWorstCase";
+            }
+            public void prepare() {
             }
             public void action() {
-                for (int i = 0; i < NUM_OPERATIONS; ++i) {
+                for (int i = 0; i < numOperations; ++i) {
                     deque = (DequeType)deque.pushFront(i);
+                }
+                for (int i = 0; i < numOperations; ++i) {
                     deque = (DequeType)deque.popBack().second;
                 }
             }
         });
     }
 
-    public void BenchFillEmpty() {
+    public void BenchAllRandom(final int numOperations) {
         measure(new Meter() {
             public String name() {
-                return "FillEmpty";
+                return "AllRandom";
             }
-            public void action() {
-                for (int i = 0; i < NUM_OPERATIONS; ++i) {
-                    if (i % 2 == 0)
-                        deque = (DequeType)deque.pushFront(i);
-                    else
-                        deque = (DequeType)deque.pushBack(i);
+            public void prepare() {
+                Random rand = new Random();
+                opers = new Boolean[numOperations];
+                for (int i = 0; i < numOperations; ++i) {
+                    opers[i] = rand.nextBoolean();
                 }
             }
+            public void action() {
+                for (int i = 0; i < numOperations; ++i) {
+                    deque = opers[i] ? (DequeType)deque.pushFront(i) : (DequeType)deque.pushBack(i);
+                }
+                for (int i = 0; i < numOperations; ++i) {
+                    deque = opers[i] ? (DequeType)deque.popBack().second : (DequeType)deque.popFront().second;
+                }
+            }
+            private Boolean[] opers;
         });
     }
 
-    interface Meter {
-        public String name();
-        public void action();
-    }
-
     private void measure(Meter meter) {
+        meter.prepare();
         System.out.println(meter.name());
-        start();
-        meter.action();
-        stop();
+        for (int i = 0; i < NUM_REPEATS; ++i) {
+            start();
+            meter.action();
+            stop();
+        }
+        System.out.println("Total Time: " + (totalTime / 1000000) + " ms (" + totalTime + " ns)");
     }
 
     private void start() {
@@ -82,14 +88,16 @@ public class DequeBenchmark<DequeType extends Deque<Integer>> {
     private void stop() {
         endTime = System.nanoTime();
         long duration = (endTime - startTime);
+        totalTime += duration;
         System.out.println("Time: " + (duration / 1000000) + " ms (" + duration + " ns)");
     }
 
     private long startTime;
     private long endTime;
+    private long totalTime;
 
     private Class<DequeType> clazz;
     private DequeType        deque;
 
-    private int NUM_OPERATIONS = 40000000;
+    private int NUM_REPEATS = 1;
 }

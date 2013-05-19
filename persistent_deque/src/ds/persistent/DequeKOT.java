@@ -14,7 +14,7 @@ public class DequeKOT<T> implements Deque<T> {
     }
 
     public DequeKOT<T> pushFront(T value) {
-        if (!full(DequeEnd.HEAD))
+        if (!fullHead())
             return new DequeKOT<T>(value, head1, head2, child, tail1, tail2, tail3);
 
         if (child == null)
@@ -26,7 +26,7 @@ public class DequeKOT<T> implements Deque<T> {
     }
 
     public Pair<T, Deque<T>> popFront() throws NoSuchElementException {
-        if (!empty(DequeEnd.HEAD)) {
+        if (!emptyHead()) {
             return new Pair<T, Deque<T>>(head1, new DequeKOT<T>(head2, head3, null, child, tail1, tail2, tail3));
         }
         if (child != null && !child.empty())
@@ -49,7 +49,7 @@ public class DequeKOT<T> implements Deque<T> {
     }
 
     public DequeKOT<T> pushBack(T value) {
-        if (!full(DequeEnd.TAIL))
+        if (!fullTail())
             return new DequeKOT<T>(head1, head2, head3, child, tail2, tail3, value);
 
         if (child == null)
@@ -61,7 +61,7 @@ public class DequeKOT<T> implements Deque<T> {
     }
 
     public Pair<T, Deque<T>> popBack() throws NoSuchElementException {
-        if (!empty(DequeEnd.TAIL)) {
+        if (!emptyTail()) {
             return new Pair<T, Deque<T>>(tail3, new DequeKOT<T>(head1, head2, head3, child, null, tail1, tail2));
         }
         if (child != null && !child.empty())
@@ -87,20 +87,18 @@ public class DequeKOT<T> implements Deque<T> {
         HEAD, TAIL
     }
 
-    private Boolean empty(DequeEnd end) {
-        if (end == DequeEnd.HEAD)
-            return head1 == null;
-        if (end == DequeEnd.TAIL)
-            return tail3 == null;
-        return false;
+    private Boolean emptyHead() {
+        return head1 == null;
+    }
+    private Boolean emptyTail() {
+        return tail3 == null;
     }
 
-    private Boolean full(DequeEnd end) {
-        if (end == DequeEnd.HEAD)
-            return head3 != null;
-        if (end == DequeEnd.TAIL)
-            return tail1 != null;
-        return false;
+    private Boolean fullHead() {
+        return head3 != null;
+    }
+    private Boolean fullTail() {
+        return tail1 != null;
     }
 
     private DequeKOT(T head1, T head2, T head3, DequeKOT<Pair<T, T>> child,
@@ -116,19 +114,6 @@ public class DequeKOT<T> implements Deque<T> {
         else
             this.child = null;
     }
-
-//    private void start() {
-//        startTime = System.nanoTime();
-//    }
-//
-//    private void stop() {
-//        endTime = System.nanoTime();
-//        duration += (endTime - startTime);
-//    }
-//
-//    private long startTime;
-//    private long endTime;
-//    private long duration;
 
     private T head1;
     private T head2;
