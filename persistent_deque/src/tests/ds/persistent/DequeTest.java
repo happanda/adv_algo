@@ -164,8 +164,8 @@ public class DequeTest<DequeType extends Deque<Integer>> {
         Boolean res = false;
         try {
             for (int oper = 0; oper < NUM_OPERATIONS; ++oper) {
-                action(decision, rand.nextInt());
                 decision = dm.make(decision);
+                action(decision, rand.nextInt());
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -182,16 +182,16 @@ public class DequeTest<DequeType extends Deque<Integer>> {
         Decision decision = Decision.PushFront;
         Random rand = new Random();
         Boolean res = false;
-        int div = 1000;
+        int div = 10000;
         try {
             for (int j = 0; j < div; ++j) {
                 for (int oper = 0; oper < NUM_OPERATIONS / div; ++oper) {
-                    action(decision, rand.nextInt());
                     decision = dm1.make(decision);
+                    action(decision, rand.nextInt());
                 }
                 for (int oper = 0; oper < NUM_OPERATIONS / div; ++oper) {
-                    action(decision, rand.nextInt());
                     decision = dm2.make(decision);
+                    action(decision, rand.nextInt());
                 }
             }
         } catch (Exception e) {

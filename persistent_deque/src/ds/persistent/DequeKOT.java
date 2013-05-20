@@ -20,21 +20,24 @@ public class DequeKOT<T> implements Deque<T> {
         if (child == null)
             child = new DequeKOT<Pair<T, T>>();
 
-        Pair<T, T> pair = new Pair<T, T>(head2, head3);
+        child = child.pushFront(new Pair<T, T>(head2, head3));
+        head2 = head3 = null;
 
-        return new DequeKOT<T>(value, head1, null, child.pushFront(pair), tail1, tail2, tail3);
+        return new DequeKOT<T>(value, head1, null, child, tail1, tail2, tail3);
     }
 
     public Pair<T, Deque<T>> popFront() throws NoSuchElementException {
-        if (!emptyHead()) {
+        if (!emptyHead())
             return new Pair<T, Deque<T>>(head1, new DequeKOT<T>(head2, head3, null, child, tail1, tail2, tail3));
-        }
+
         if (child != null && !child.empty())
         {
             Pair<Pair<T, T>, Deque<Pair<T, T>>> res = child.popFront();
-            DequeKOT<T> d = new DequeKOT<T>(res.first.second, null, null,
-                    (DequeKOT<Pair<T, T>>)res.second,
-                    tail1, tail2, tail3);
+            child = (DequeKOT<Pair<T, T>>)res.second;
+            head1 = res.first.first;
+            head2 = res.first.second;
+
+            Deque<T> d = new DequeKOT<T>(res.first.second, null, null, child, tail1, tail2, tail3);
             return new Pair<T, Deque<T>>(res.first.first, d);
         }
 
@@ -55,21 +58,24 @@ public class DequeKOT<T> implements Deque<T> {
         if (child == null)
             child = new DequeKOT<Pair<T, T>>();
 
-        Pair<T, T> pair = new Pair<T, T>(tail1, tail2);
+        child = child.pushBack(new Pair<T, T>(tail1, tail2));
+        tail1 = tail2 = null;
 
-        return new DequeKOT<T>(head1, head2, head3, child.pushBack(pair), null, tail3, value);
+        return new DequeKOT<T>(head1, head2, head3, child, null, tail3, value);
     }
 
     public Pair<T, Deque<T>> popBack() throws NoSuchElementException {
-        if (!emptyTail()) {
+        if (!emptyTail())
             return new Pair<T, Deque<T>>(tail3, new DequeKOT<T>(head1, head2, head3, child, null, tail1, tail2));
-        }
+
         if (child != null && !child.empty())
         {
             Pair<Pair<T, T>, Deque<Pair<T, T>>> res = child.popBack();
-            DequeKOT<T> d = new DequeKOT<T>(head1, head2, head3,
-                    (DequeKOT<Pair<T, T>>)res.second,
-                    null, null, res.first.first);
+            child = (DequeKOT<Pair<T, T>>)res.second;
+            tail2 = res.first.first;
+            tail3 = res.first.second;
+
+            DequeKOT<T> d = new DequeKOT<T>(head1, head2, head3, child, null, null, res.first.first);
             return new Pair<T, Deque<T>>(res.first.second, d);
         }
 
@@ -81,10 +87,6 @@ public class DequeKOT<T> implements Deque<T> {
             return new Pair<T, Deque<T>>(head1, new DequeKOT<T>());
 
         throw new NoSuchElementException("Pop from empty deque");
-    }
-
-    enum DequeEnd {
-        HEAD, TAIL
     }
 
     private Boolean emptyHead() {
