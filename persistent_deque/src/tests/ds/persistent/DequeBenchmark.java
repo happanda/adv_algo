@@ -34,15 +34,20 @@ public class DequeBenchmark<DequeType extends Deque<Integer>> {
                 return "FillEmptyWorstCase";
             }
             public void prepare() {
+			    deques = new Object[numOperations];
             }
             public void action() {
+			    Random rand = new Random();
                 for (int i = 0; i < numOperations; ++i) {
                     deque = (DequeType)deque.pushFront(i);
+					deques[i] = deque;
                 }
                 for (int i = 0; i < numOperations; ++i) {
-                    deque = (DequeType)deque.popBack().second;
+                    deques[i] = (DequeType)((DequeType)deques[i]).pushFront(rand.nextInt());
+					deques[i] = (DequeType)((DequeType)deques[i]).popBack().second;
                 }
             }
+			private Object[] deques;
         });
     }
 
